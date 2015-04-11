@@ -4,7 +4,12 @@ class window.Hand extends Backbone.Collection
   initialize: (array, @deck, @isDealer) ->
 
   hit: ->
-    @add(@deck.pop())
+  	# checks whether the user is able to hit or not
+    if @scores()[0] < 21
+    	@add(@deck.pop())
+    # checks if the user didn't padd the score's limit(21), otherwise the user lost 
+    if @scores()[0] > 21
+    	alert('You lost')
 
   hasAce: -> @reduce (memo, card) ->
     memo or card.get('value') is 1
