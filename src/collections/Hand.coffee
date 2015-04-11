@@ -10,6 +10,9 @@ class window.Hand extends Backbone.Collection
     # checks if the user didn't padd the score's limit(21), otherwise the user lost 
     if @scores()[0] > 21
     	alert('You lost')
+    # if score is equal 21, then it's dealer's turn
+    if @scores()[0] == 21
+    	console.log("Dealer's turn")
 
   hasAce: -> @reduce (memo, card) ->
     memo or card.get('value') is 1
