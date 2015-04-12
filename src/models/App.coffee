@@ -14,5 +14,25 @@ class window.App extends Backbone.Model
 
   playerEvents: (event, hand) ->
     switch event
-      when 'bust'  then @trigger 'win-dealer'
+      when 'bust'  then @trigger 'dealer-wins'
       when 'stand' then @get('dealerHand').playToWin()
+
+  dealerEvents: (event, hand) ->
+    switch event
+      when 'bust'  then @trigger 'player-wins'
+      when 'stand' then @compareScores()
+  
+  compareScores: ->
+    if @get('playerHand').maxScore() > @get('dealerHand').maxScore()
+      console.log('this (playerHand)', this)
+      @trigger 'player-wins'
+    else if @get('dealerHand').maxScore() > @get('playerHand').maxScore()
+      console.log('this (dealerHand)', this)
+      @trigger 'dealer-wins'
+    else
+      @trigger 'push'
+
+ 
+    
+
+  
