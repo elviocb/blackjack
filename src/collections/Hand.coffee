@@ -4,19 +4,31 @@ class window.Hand extends Backbone.Collection
   initialize: (array, @deck, @isDealer) ->
 
   hit: ->
-  	# checks whether the user is able to hit or not
-    if @scores()[0] < 21
-    	@add(@deck.pop())
-    # checks if the user didn't padd the score's limit(21), otherwise the user lost 
-    if @scores()[0] > 21
-    	alert('You lost')
-    # if score is equal 21, then it's dealer's turn
-    if @scores()[0] == 21
-    	console.log("Dealer's turn")
+    @add(@deck.pop())
+    if @busted()
+      @trigger 'bust', @
+
+  stand: ->
+  	# emmit an event to the app
+  	@trigger 'stand', @
+
+  busted: ->
+    @scores[0] > 21
 
   hasAce: -> @reduce (memo, card) ->
     memo or card.get('value') is 1
   , 0
+
+  playToWin: ->
+    @first().flip()
+    while @scores()[0] < 17
+      @hit()
+    if !@busted()
+      @stand()
+
+  maxScore: -> 
+    score = @scores()
+    if score[1] <= 21 then score[1] else score[0] 
 
   minScore: -> @reduce (score, card) ->
     score + if card.get 'revealed' then card.get 'value' else 0
